@@ -1,6 +1,6 @@
-FROM ubuntu
+FROM debian:sid
 ENV DISPLAY=":0"
-RUN apt-get update && apt-get install -y --fix-missing autoconf automake libtool libharfbuzz-dev \
+RUN apt-get update && apt-get dist-upgrade -y && apt-get install -y --fix-missing autoconf automake libtool libharfbuzz-dev \
         libfreetype6-dev libfontconfig1-dev libx11-dev libxrandr-dev \
         libvdpau-dev libva-dev mesa-common-dev libegl1-mesa-dev yasm \
         libasound2-dev libpulse-dev libuchardet-dev zlib1g-dev libfribidi-dev \
@@ -28,7 +28,7 @@ RUN checkinstall --install=yes \
         --pkgname=plex-media-player \
         --pkgversion="$(wget -qO - https://api.github.com/repos/plexinc/plex-media-player/releases/latest | grep tag_name | sed 's|"tag_name": ||' | tr -d ' ,\"')" \
         --pkglicense=gpl2 \
-        --pkgrelease=unofficial \
+        --pkgrelease=unofficial-debian \
         --deldoc=yes \
         --deldesc=yes \
         --delbak=yes \
