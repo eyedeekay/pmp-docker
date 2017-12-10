@@ -18,7 +18,7 @@ info:
 	@echo "make clean: Automatically deletes the docker containers and build artifacts."
 
 build:
-	docker build -f Dockerfile.$(DISTRO) -t plex-media-player .
+	docker build -f Dockerfile.$(DISTRO) -t plex-media-player-$(DISTRO) .
 
 run: build
 	docker run -ti --rm \
