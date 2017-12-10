@@ -1,0 +1,38 @@
+FROM ubuntu
+ENV DISPLAY=":0"
+RUN apt-get update && apt-get install -y --fix-missing autoconf automake libtool libharfbuzz-dev \
+        libfreetype6-dev libfontconfig1-dev libx11-dev libxrandr-dev \
+        libvdpau-dev libva-dev mesa-common-dev libegl1-mesa-dev yasm \
+        libasound2-dev libpulse-dev libuchardet-dev zlib1g-dev libfribidi-dev \
+        git libgnutls-dev libgl1-mesa-dev libsdl2-dev cmake gzip tar \
+        python-pip python3-pip jq wget checkinstall
+RUN adduser --home /home/plexmediaplayer/ --disabled-password --gecos 'plexmediaplayer,,,,' plexmediaplayer
+
+USER plexmediaplayer
+RUN mkdir /home/plexmediaplayer/pmp
+
+RUN pip install -U conan
+RUN find /usr/ -name conan
+RUN /home/plexmediaplayer/.local/bin/conan remote add plex https://conan.plex.tv
+
+WORKDIR /home/plexmediaplayer/pmp
+
+RUN wget -O plex.tar.gz $(wget -qO - https://api.github.com/repos/plexinc/plex-media-player/releases/latest | grep tarball_url | sed 's|"tarball_url": ||' | tr -d ' ,\"')
+RUN tar -xvzf plex.tar.gz && mv plexinc-plex-media-player-* plex-media-player
+
+WORKDIR /home/plexmediaplayer/pmp/plex-media-player/build
+RUN /home/plexmediaplayer/.local/bin/conan install ..
+RUN cmake -DCMAKE_BUILD_TYPE=Debug -DQTROOT=/opt/Qt5.6.1/5.6/gcc_64/ -DCMAKE_INSTALL_PREFIX=/usr/local/ ..
+RUN make
+RUN checkinstall --install=yes \
+        --pkgname=plex-media-player \
+        --pkgversion="$(wget -qO - https://api.github.com/repos/plexinc/plex-media-player/releases/latest | grep tag_name | sed 's|"tag_name": ||' | tr -d ' ,\"')" \
+        --pkglicense=gpl2 \
+        --pkgrelease=unofficial \
+        --deldoc=yes \
+        --deldesc=yes \
+        --delbak=yes \
+        --pakdir ..
+RUN ls ..
+CMD plex-media-player
+

@@ -1,0 +1,7 @@
+FROM alpine:edge
+RUN apk update
+RUN apk search zlib1g #libfribidi-dev git libgnutls-dev libgl1-mesa-dev libsdl2-dev cmake
+#RUN apk add cmake ninja ffmpeg mpv autoconf automake libtool qt5* \
+        #libxrandr-dev libx11-dev harfbuzz-dev freetype fontconfig-dev \
+        #libvdpau-dev libva-dev mesa-egl mesa-dev yasm alsa-lib py3-chardet \
+        #zlib1g
