@@ -20,7 +20,7 @@ info:
 build:
 	docker build -f Dockerfile.$(DISTRO) -t plex-media-player .
 
-run:
+run: build
 	docker run -ti --rm \
 		-e DISPLAY=$(DISPLAY) \
 		--device /dev/snd \
@@ -28,10 +28,10 @@ run:
 		-e DISPLAY=unix$(DISPLAY) \
 		plex-media-player-$(DISTRO)
 
-open:
+open: build
 	docker run -t -d --rm --name plex-media-player-box plex-media-player-$(DISTRO) bash
 
-deb: build open
+deb: open
 	docker cp plex-media-player-box:/home/plexmediaplayer/pms/plex-media-player_$(VERSION).deb .
 	docker rm -f plex-media-player-box; docker rmi -f plex-media-player-box; true
 
