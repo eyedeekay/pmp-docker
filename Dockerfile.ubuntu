@@ -30,6 +30,7 @@ RUN checkinstall --install=yes \
         --pkgversion="$(wget -qO - https://api.github.com/repos/plexinc/plex-media-player/releases/latest | grep tag_name | sed 's|"tag_name": ||' | tr -d ' ,\"')" \
         --pkglicense=gpl2 \
         --pkgrelease=unofficial-ubuntu \
+        --requires="libharfbuzz,libvdpau,libfreetype,libfontconfig,libva,libxrandr,libx11,libuchardet,mesa-common,libegl1-mesa,yasm,libasound,zlib1g,libfribidi,libsdl2,libgnutls" \
         --deldoc=yes \
         --deldesc=yes \
         --delbak=yes \
